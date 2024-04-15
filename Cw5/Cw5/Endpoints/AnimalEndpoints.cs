@@ -20,10 +20,15 @@ public static class AnimalEndpoints
         } );
         app.MapGet("/animals/{id}", (int id) =>
         {
-            return Results.Ok(id);
+            return Results.Ok(StaticData.Animals[id]);
         });
         app.MapPost("/animals", (Animal animal) =>
         {
+            if (StaticData.Animals.Exists((animal1 => animal1.Id==animal.Id )))
+            {
+                return Results.BadRequest("Animal with a given id exists");
+            }
+            StaticData.Animals.Add(animal);
             return Results.Created("",animal);
         });
     }
