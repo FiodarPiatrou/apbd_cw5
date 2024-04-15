@@ -20,6 +20,10 @@ public static class AnimalEndpoints
         } );
         app.MapGet("/animals/{id}", (int id) =>
         {
+            if (id>StaticData.Animals.Count-1)
+            {
+                return Results.BadRequest("No Animal with given id");
+            }
             return Results.Ok(StaticData.Animals[id]);
         });
         app.MapPost("/animals", (Animal animal) =>
@@ -30,6 +34,11 @@ public static class AnimalEndpoints
             }
             StaticData.Animals.Add(animal);
             return Results.Created("",animal);
+        });
+        app.MapPut("/animals/{id}", (int id, Animal animal) =>
+        {
+            StaticData.Animals[id] = animal;
+            return Results.Ok();
         });
     }
 }
