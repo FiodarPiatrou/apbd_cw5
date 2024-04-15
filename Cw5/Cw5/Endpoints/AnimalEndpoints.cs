@@ -40,7 +40,7 @@ public static class AnimalEndpoints
         app.MapPut("/animals/{id}", (int id, Animal animal) =>
         {
             StaticData.Animals[id] = animal;
-            return Results.Ok();
+            return Results.Ok(animal);
         });
         app.MapDelete("/animals/{id}", (int id) =>
         {
