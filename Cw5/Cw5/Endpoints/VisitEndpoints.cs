@@ -1,5 +1,6 @@
 using Cw5.Database;
 using Cw5.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cw5.Endpoints;
 
@@ -9,7 +10,7 @@ public static class VisitEndpoints
     {
         app.MapPost("/visits", (Visit visit) =>
         {
-            if (StaticData.Visits.Exists(visit1 =>StaticData.Animals.Contains(visit.Animal)))
+            if (!StaticData.Animals.Contains(visit.Animal))
             {
                 StaticData.Visits.Add(visit);
                 return Results.Created("", visit);
@@ -17,16 +18,16 @@ public static class VisitEndpoints
 
             return Results.BadRequest("No such animal in database");
         });
-        app.MapGet("/visits", (Animal animal) =>
+        app.MapGet("/visits/{id}", (int id) =>
         {
             var animalVisits = new List<Visit>();
-            if (!StaticData.Visits.Exists(visit => visit.Animal==animal))
+            if (!StaticData.Visits.Exists(visit => visit.Animal==StaticData.Animals[id]))
             {
                 return Results.BadRequest("No such visits with given animal");
             }
             foreach (var visit in StaticData.Visits)
             {
-                if (visit.Animal==animal)
+                if (visit.Animal==StaticData.Animals[id])
                 {
                     animalVisits.Add(visit);
                 }
